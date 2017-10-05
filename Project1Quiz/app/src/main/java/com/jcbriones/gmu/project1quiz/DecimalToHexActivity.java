@@ -22,6 +22,9 @@ public class DecimalToHexActivity extends AppCompatActivity {
     protected Spinner hexSpinner0;
     protected Spinner hexSpinner1;
     protected Spinner hexSpinner2;
+    protected RadioButton tooSmall;
+    protected RadioButton tooBig;
+    protected  RadioButton answer;
     protected RadioGroup radioValueSize;
     protected TextView questionView;
     protected TextView correctAnswerDecimal;
@@ -35,6 +38,11 @@ public class DecimalToHexActivity extends AppCompatActivity {
     private int score;
     private int tries;
     private int generatedValue;
+
+    // The extra bit that will allow the users to select radio buttons that tells the generated random value is too big or too small
+    // Value can be change but should go above the total number of bits of an int including how many bits are being selected.
+    // If it goes more than the total number of an int then it may cause for the generated number to overflow.
+    private int extraBit = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,17 +70,70 @@ public class DecimalToHexActivity extends AppCompatActivity {
     public void onButtonClickCheckAnswers(View view) {
         // Check first if the inputs are valid inputs. Otherwise, Tell user to enter a valid input
         try {
-            RadioButton tooSmall = (RadioButton) findViewById(R.id.radioTooSmall);
-            RadioButton tooBig = (RadioButton) findViewById(R.id.radioTooBig);
-            RadioButton answer = (RadioButton) findViewById(R.id.radioAnswer);
+            if (radioValueSize.getCheckedRadioButtonId() < 0) {
+                // Alert the user to select a radio button before checking for an answer.
+                Toast.makeText(getApplicationContext(), "Please make sure you have selected your answer before continuing. Scores aren't affected by this warning.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            correctAnswerDecimal.setVisibility(View.VISIBLE);
 
             String hexVal = hexSpinner2.getSelectedItem().toString() + hexSpinner1.getSelectedItem().toString() + hexSpinner0.getSelectedItem().toString();
-            if (Integer.parseInt(hexVal, 16) == generatedValue) {
-                score++;
-                correctAnswerDecimal.setText(("Unsigned: Correct!"));
+            switch(questionType) {
+                case "Decimal to Unsigned Hex":
+                    // Answer is too big
+                    if (generatedValue > 63) {
+                        if (tooBig.isChecked()) {
+                            score++;
+                            correctAnswerDecimal.setText(("Answer: Correct!"));
+                        }
+                        else
+                            correctAnswerDecimal.setText(("Answer: Value is too big"));
+                    }
+                    // Answer is too small
+                    else if (generatedValue < 0) {
+                        if (tooSmall.isChecked()) {
+                            score++;
+                            correctAnswerDecimal.setText(("Answer: Correct!"));
+                        } else
+                            correctAnswerDecimal.setText(("Answer: Value is too small"));
+                    }
+                    // Answer is a value of something
+                    else if (Integer.parseInt(hexVal, 16) == generatedValue && answer.isChecked()) {
+                        score++;
+                        correctAnswerDecimal.setText(("Answer: Correct!"));
+                    }
+                    // Incorrect answer. Show the correct value
+                    else
+                        correctAnswerDecimal.setText(("Answer: 0x" + Integer.toHexString(generatedValue).toUpperCase()));
+                    break;
+                case "Decimal to Signed Hex":
+                    // Answer is too big
+                    if (generatedValue > 31) {
+                        if (tooBig.isChecked()) {
+                            score++;
+                            correctAnswerDecimal.setText(("Answer: Correct!"));
+                        } else
+                            correctAnswerDecimal.setText(("Answer: Value is too big"));
+                    }
+                    // Answer is too small
+                    else if (generatedValue < -32) {
+                        if (tooSmall.isChecked()) {
+                            score++;
+                            correctAnswerDecimal.setText(("Answer: Correct!"));
+                        } else
+                            correctAnswerDecimal.setText(("Answer: Value is too small"));
+                    }
+                    // Answer is a value of something
+                    else if (Integer.parseInt(hexVal, 16) == (generatedValue & bitMask()) && answer.isChecked()) {
+                        score++;
+                        correctAnswerDecimal.setText(("Answer: Correct!"));
+                    }
+                    // Incorrect answer. Show the correct value
+                    else
+                        correctAnswerDecimal.setText(("Answer: 0x" + Integer.toHexString(generatedValue & bitMask()).toUpperCase()));
+                    break;
             }
-            else
-                correctAnswerDecimal.setText(("Unsigned: 0x" + Integer.toHexString(generatedValue).toUpperCase()));
             tries++;
 
             // Switch buttons
@@ -115,6 +176,9 @@ public class DecimalToHexActivity extends AppCompatActivity {
         hexSpinner0 = (Spinner)findViewById(R.id.hex0);
         hexSpinner1 = (Spinner)findViewById(R.id.hex1);
         hexSpinner2 = (Spinner)findViewById(R.id.hex2);
+        tooSmall = (RadioButton) findViewById(R.id.radioTooSmall);
+        tooBig = (RadioButton) findViewById(R.id.radioTooBig);
+        answer = (RadioButton) findViewById(R.id.radioAnswer);
         radioValueSize = (RadioGroup)findViewById(R.id.radioValueSize);
         questionView = (TextView) findViewById(R.id.textViewQuestion);
         correctAnswerDecimal = (TextView) findViewById(R.id.correctAnswerDecimal);
@@ -164,30 +228,30 @@ public class DecimalToHexActivity extends AppCompatActivity {
         buttonNewQuestion.setVisibility(View.GONE);
         buttonCheckAnswer.setVisibility(View.VISIBLE);
 
-        // Reset the selection back to zeros
+        // Reset the selection back to zeros and radiobox to unchecked
+        radioValueSize.check(-1);
         hexSpinner0.setSelection(0);
         hexSpinner1.setSelection(0);
         hexSpinner2.setSelection(0);
 
-        // Generate new number
-        generatedValue = (int)(Math.random() * Math.pow(2, Integer.valueOf(bitCount) + 1));
-
         String question;
+
         switch (questionType) {
             case "Decimal to Unsigned Hex":
+                // Generate new random number
+                generatedValue = (int)(Math.random() * Math.pow(2, Integer.valueOf(bitCount) + extraBit));
+
+                // Set the question
                 question = "In unsigned, what is the " + bitCount + "-bit hex value for " + Integer.toString(generatedValue);
                 questionView.setText(question);
                 break;
 
             case "Decimal to Signed Hex":
-                if (generatedValue > 31 && bitCount.equals("6"))
-                    question = "In two's complement, what is the " + bitCount + "-bit hex value for " + Integer.toString(generatedValue - 64);
-                else if (generatedValue > 127 && bitCount.equals("8"))
-                    question = "In two's complement, what is the " + bitCount + "-bit hex value for " + Integer.toString(generatedValue - 256);
-                else if (generatedValue > 511 && bitCount.equals("10"))
-                    question = "In two's complement, what is the " + bitCount + "-bit hex value for " + Integer.toString(generatedValue - 1024);
-                else
-                    question = "In two's complement, what is the " + bitCount + "-bit hex value for " + Integer.toString(generatedValue);
+                // Generate new random number
+                generatedValue = (int)(Math.random() * Math.pow(2, Integer.valueOf(bitCount) + extraBit) - Math.pow(2, Integer.valueOf(bitCount) + extraBit - 1));
+
+                // Set the question
+                question = "In two's complement, what is the " + bitCount + "-bit hex value for " + Integer.toString(generatedValue);
                 questionView.setText(question);
                 break;
 
@@ -204,5 +268,18 @@ public class DecimalToHexActivity extends AppCompatActivity {
 
     private void updateScore() {
         scorecard.setText(score + " / " + tries);
+    }
+
+    private int bitMask() {
+        switch (bitCount) {
+            case "6":
+                return 0x3F;
+            case "8":
+                return 0xFF;
+            case "10":
+                return 0x3FF;
+            default:
+                return 0;
+        }
     }
 }

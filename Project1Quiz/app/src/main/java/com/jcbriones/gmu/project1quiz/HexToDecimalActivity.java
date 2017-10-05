@@ -55,8 +55,9 @@ public class HexToDecimalActivity extends AppCompatActivity {
             correctAnswerSigned.setVisibility(View.VISIBLE);
             correctAnswerUnsigned.setVisibility(View.VISIBLE);
 
-            int signedValue = getSignedValue(generatedValue);
+            int signedValue = getSignedBit(generatedValue);
 
+            // Signed Value Checking
             if (inputSigned.getText().toString().equals(Integer.toString(signedValue))) {
                 score++;
                 correctAnswerSigned.setText(("Signed: Correct!"));
@@ -64,6 +65,8 @@ public class HexToDecimalActivity extends AppCompatActivity {
             else
                 correctAnswerSigned.setText(("Signed: " + Integer.toString(signedValue)));
             tries++;
+
+            // Unsigned Value Checking
             if (inputUnsigned.getText().toString().equals(Integer.toString(generatedValue))) {
                 score++;
                 correctAnswerUnsigned.setText(("Unsigned: Correct!"));
@@ -108,7 +111,7 @@ public class HexToDecimalActivity extends AppCompatActivity {
         return false;
     }
 
-    private int getSignedValue(int generatedValue) {
+    private int getSignedBit(int generatedValue) {
         int signedBit;
         switch(bitCount) {
             case "6":
@@ -157,7 +160,7 @@ public class HexToDecimalActivity extends AppCompatActivity {
         inputSigned.setText("");
         inputUnsigned.setText("");
 
-        // Generate new number
+        // Generate new random number
         generatedValue = (int)(Math.random() * Math.pow(2, Integer.valueOf(bitCount)));
 
         String question = "What are the signed and unsigned decimal values for the 0x" + Integer.toHexString(generatedValue).toUpperCase();

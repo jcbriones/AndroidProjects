@@ -137,12 +137,6 @@
 
             </RadioGroup>
 
-            <TextView
-                android:id="@+id/correctAnswerDecimal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Answer for Hex" />
-
             <Button
                 android:id="@+id/buttonCheckAnswer"
                 android:layout_width="match_parent"
@@ -185,6 +179,12 @@
                     android:textAlignment="textStart"
                     android:textSize="16dp" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/correctAnswerDecimal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Answer for Hex" />
 
         </LinearLayout>
     </ScrollView>
