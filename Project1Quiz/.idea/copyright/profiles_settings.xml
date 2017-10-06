@@ -1,3 +1,7 @@
 <component name="CopyrightManager">
-  <settings default="" />
+  <settings default="JcBriones GMU">
+    <module2copyright>
+      <element module="All" copyright="JcBriones GMU" />
+    </module2copyright>
+  </settings>
 </component>

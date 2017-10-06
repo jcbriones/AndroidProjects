@@ -61,7 +61,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textViewQuestion"
+                android:id="@+id/textViewQuestionType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Please select what type of question you like"
@@ -72,6 +72,7 @@
                 android:id="@+id/spinnerQuestion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="88dp" />
 
@@ -87,6 +88,7 @@
                 android:id="@+id/spinnerBitCount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="56dp" />
 
@@ -96,6 +98,8 @@
                 android:layout_height="wrap_content"
                 android:onClick="onButtonClickGo"
                 android:text="Go"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/button"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="422dp" />
 
@@ -109,7 +113,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Score"
-                    android:textSize="16dp"
+                    android:textSize="20dp"
                     android:layout_weight="0.03" />
 
                 <TextView
@@ -119,7 +123,7 @@
                     android:layout_weight="1"
                     android:text="0"
                     android:textAlignment="textStart"
-                    android:textSize="16dp" />
+                    android:textSize="20dp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

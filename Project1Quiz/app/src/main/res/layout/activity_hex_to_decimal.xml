@@ -98,23 +98,12 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/correctAnswerSigned"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="ANSWER_FOR SIGNED" />
-
-            <TextView
-                android:id="@+id/correctAnswerUnsigned"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="ANSWER_FOR_UNSIGNED" />
-
             <Button
                 android:id="@+id/buttonCheckAnswer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorAccent"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/button"
                 android:onClick="onButtonClickCheckAnswers"
                 android:text="CHECK MY ANSWER"
                 tools:layout_editor_absoluteX="8dp"
@@ -124,7 +113,8 @@
                 android:id="@+id/buttonNewQuestion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/button"
                 android:onClick="onButtonClickNewQuestion"
                 android:text="Click for Another Question"
                 tools:layout_editor_absoluteX="8dp"
@@ -141,7 +131,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.03"
                     android:text="Score"
-                    android:textSize="16dp" />
+                    android:textSize="20dp" />
 
                 <TextView
                     android:id="@+id/textViewScore"
@@ -150,8 +140,26 @@
                     android:layout_weight="1"
                     android:text="0"
                     android:textAlignment="textStart"
-                    android:textSize="16dp" />
+                    android:textSize="20dp" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/correctAnswerUnsigned"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ANSWER_FOR_UNSIGNED"
+                android:textAlignment="center"
+                android:textColor="@android:color/holo_purple"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/correctAnswerSigned"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ANSWER_FOR SIGNED"
+                android:textAlignment="center"
+                android:textColor="@android:color/holo_purple"
+                android:textSize="24sp" />
 
         </LinearLayout>
     </ScrollView>

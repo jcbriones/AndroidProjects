@@ -42,7 +42,7 @@ public class DecimalToHexActivity extends AppCompatActivity {
     // The extra bit that will allow the users to select radio buttons that tells the generated random value is too big or too small
     // Value can be change but should go above the total number of bits of an int including how many bits are being selected.
     // If it goes more than the total number of an int then it may cause for the generated number to overflow.
-    private int extraBit = 1;
+    private static int extraBit = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,15 +206,15 @@ public class DecimalToHexActivity extends AppCompatActivity {
         hexVals.add("D");
         hexVals.add("E");
         hexVals.add("F");
-        ArrayAdapter<String> dataHex0Adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, hexVals);
+        ArrayAdapter<String> dataHex0Adapter = new ArrayAdapter<>(this, R.layout.spinner_item, hexVals);
         dataHex0Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         hexSpinner0.setAdapter(dataHex0Adapter);
 
-        ArrayAdapter<String> dataHex1Adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, hexVals);
+        ArrayAdapter<String> dataHex1Adapter = new ArrayAdapter<>(this, R.layout.spinner_item, hexVals);
         dataHex1Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         hexSpinner1.setAdapter(dataHex1Adapter);
 
-        ArrayAdapter<String> dataHex2Adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, hexVals);
+        ArrayAdapter<String> dataHex2Adapter = new ArrayAdapter<>(this, R.layout.spinner_item, hexVals);
         dataHex2Adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         if (Integer.valueOf(bitCount) <= 8) {
             hexSpinner2.setEnabled(false);

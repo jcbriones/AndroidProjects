@@ -23,7 +23,6 @@ public class HexToDecimalActivity extends AppCompatActivity {
     protected LinearLayout hexToDecimal;
     protected TextView scorecard;
 
-    private String questionType;
     private String bitCount;
     private int score;
     private int tries;
@@ -36,7 +35,6 @@ public class HexToDecimalActivity extends AppCompatActivity {
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
-        questionType = intent.getStringExtra(MainActivity.TYPE_OF_QUESTION);
         bitCount = intent.getStringExtra(MainActivity.BIT_COUNT);
         score = Integer.valueOf(intent.getStringExtra(MainActivity.SCORE));
         tries = Integer.valueOf(intent.getStringExtra(MainActivity.TRIES));
@@ -52,6 +50,12 @@ public class HexToDecimalActivity extends AppCompatActivity {
     public void onButtonClickCheckAnswers(View view) {
         // Check first if the inputs are valid inputs. Otherwise, Tell user to enter a valid input
         try {
+            if (inputSigned.getText().toString().isEmpty() || inputUnsigned.getText().toString().isEmpty()) {
+                // Alert the user to select a radio button before checking for an answer.
+                Toast.makeText(getApplicationContext(), "Please make sure you have answered both fields before continuing. Scores aren't affected by this warning.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             correctAnswerSigned.setVisibility(View.VISIBLE);
             correctAnswerUnsigned.setVisibility(View.VISIBLE);
 

@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         questionType.add("Hex to Decimal");
         questionType.add("Decimal to Unsigned Hex");
         questionType.add("Decimal to Signed Hex");
-        ArrayAdapter<String> dataQuestionTypeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, questionType);
+        ArrayAdapter<String> dataQuestionTypeAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, questionType);
         dataQuestionTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         question.setAdapter(dataQuestionTypeAdapter);
 
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         bitCount.add("6");
         bitCount.add("8");
         bitCount.add("10");
-        ArrayAdapter<String> dataBitCountAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, bitCount);
+        ArrayAdapter<String> dataBitCountAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, bitCount);
         dataBitCountAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         bit_count.setAdapter(dataBitCountAdapter);
 
