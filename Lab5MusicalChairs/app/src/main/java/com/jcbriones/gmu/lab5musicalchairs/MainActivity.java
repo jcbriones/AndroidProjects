@@ -1,7 +1,10 @@
 package com.jcbriones.gmu.lab5musicalchairs;
 
+import android.animation.ObjectAnimator;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,8 +18,7 @@ import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity {
-    private static final int SITTING = 0;
-    private static final int STANDING = 1;
+    private static final int UPDATELOSER = 1;
     private static final int UPDATEPLAYER = 2;
     private static final int LOSERINFO = 3;
     private static final int FREEZE_BUTTON = 4;
@@ -92,13 +94,6 @@ public class MainActivity extends AppCompatActivity {
         Thread t = new Thread(r);
         t.start();
 
-//        Thread new Thread(new Player(0)).start();
-//        new Thread(new Player(1)).start();
-//        new Thread(new Player(2)).start();
-//        new Thread(new Player(3)).start();
-//        new Thread(new Player(4)).start();
-//        new Thread(new Player(5)).start();
-
         if (num_seats <= 0) {
             playbutton.setEnabled(false);
             playbutton.setText("Done");
@@ -109,20 +104,36 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // remove the handler
+    // Handler for controlling UI views
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             ImageView img;
+            ObjectAnimator animation;
             switch (msg.what) {
-                case SITTING:
-                    break;
-                case STANDING:
-                    break;
+                case UPDATELOSER:
+                    // Convert loser image to grayscale
+                    ColorMatrix matrix = new ColorMatrix();
+                    matrix.setSaturation(0);
+                    ColorMatrixColorFilter cf = new ColorMatrixColorFilter(matrix);
+
+                    img = (ImageView) msg.obj;
+                    img.setColorFilter(cf);
+
+                    animation = ObjectAnimator.ofFloat(img, "translationX", -400f);
+                    animation.setDuration(1000);
+                    animation.start();
                 case UPDATEPLAYER:
+                    img = (ImageView) msg.obj;
+                    animation = ObjectAnimator.ofFloat(img, "rotation", 0, 360f);
+                    animation.setDuration(1000);
+                    animation.start();
                     break;
                 case LOSERINFO:
-                    info.setText((info.getText() + "," + msg.obj));
+                    if (info.getText().equals(""))
+                        info.setText(("Losers: " + msg.obj));
+                    else
+                        info.setText((info.getText() + "," + msg.obj));
                     break;
                 case FREEZE_BUTTON:
                     playbutton.setEnabled(false);
@@ -138,14 +149,14 @@ public class MainActivity extends AppCompatActivity {
 
         Round(int seats) {
             num_seats = seats;
-
         }
         public void run() {
 
+            // Create seats for the round
+            for (int i = 0; i < NUM_PLAYERS; i++)
+                seats[i] = new Seat();
 
-            for (int i = 0;i<NUM_PLAYERS;i++) seats[i] = new Seat();  // create seats for the round
-
-            for (int i = 0;i<NUM_PLAYERS;i++) {
+            for (int i = 0; i < NUM_PLAYERS; i++) {
                 if (!p[i].isLoser()) {
                     Thread pt = new Thread(p[i]);
                     pt.start();
@@ -153,7 +164,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
             try {
-                Thread.sleep(50);
+                handler.sendMessage(Message.obtain(handler,
+                        MainActivity.FREEZE_BUTTON));
+                Thread.sleep(1000);
+                if (num_seats > 1)
+                handler.sendMessage(Message.obtain(handler,
+                        MainActivity.UNFREEZE_BUTTON));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -219,6 +235,14 @@ public class MainActivity extends AppCompatActivity {
                     if (j == num_seats+1) {
                         // update loser info
                         loser = true;
+                        handler.sendMessage(Message.obtain(handler,
+                                MainActivity.UPDATELOSER, image[which_player]));
+                        handler.sendMessage(Message.obtain(handler,
+                                MainActivity.LOSERINFO, which_player + 1));
+                    }
+                    else {
+                        handler.sendMessage(Message.obtain(handler,
+                                MainActivity.UPDATEPLAYER, image[which_player]));
                     }
                     break;
                 }

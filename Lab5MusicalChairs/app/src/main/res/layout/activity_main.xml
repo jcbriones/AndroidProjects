@@ -28,6 +28,7 @@
 
         <Button
             android:id="@+id/playbutton"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="doRound"
@@ -35,39 +36,41 @@
 
         <ImageView
             android:id="@+id/img1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="60dp" />
 
         <ImageView
             android:id="@+id/img2"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="60dp" />
 
         <ImageView
             android:id="@+id/img3"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="60dp" />
 
         <ImageView
             android:id="@+id/img4"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="60dp" />
 
         <ImageView
             android:id="@+id/img5"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="60dp" />
 
         <ImageView
             android:id="@+id/img6"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="60dp" />
 
         <TextView
             android:id="@+id/loserInfo"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Losers: " />
+            android:textAlignment="center"
+            android:textColor="@color/colorAccent"
+            android:textSize="18sp" />
     </LinearLayout>
 
     <TextView
