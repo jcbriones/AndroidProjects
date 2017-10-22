@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         mCursor = db.query(TABLE_NAME, columns, null, null, null, null,
                 null);
 
-        listView = (ListView) findViewById(R.id.mylist);
+        listView = (ListView) findViewById(R.id.toDoList);
 
         myAdapter = new SimpleCursorAdapter(this,
                 android.R.layout.simple_list_item_1,
@@ -55,17 +55,29 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(myAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String task = myAdapter.getItem(position).toString();
+                mCursor.moveToPosition(position);
+                String task = mCursor.getString(1);
 
-                if (task.startsWith("Done:")) {
+                if (task.startsWith("Done: ")) {
                     // TODO Lab 6
                     //               String newtask = task.substring(6);
                     //myAdapter.remove(myAdapter.getItem(position));
                     //myAdapter.insert(newtask,0);
+                    if (db == null)
+                        db = dbHelper.getWritableDatabase();
+                    doDelete(task);
+                    doAddTop(task.substring(6));
+                    myAdapter.notifyDataSetChanged();
+
                 } else {
                     // TODO Lab 6
                     //                   myAdapter.remove(myAdapter.getItem(position));
                     //                   myAdapter.add("Done: " + task);
+                    if (db == null)
+                        db = dbHelper.getWritableDatabase();
+                    doDelete(task);
+                    doAdd("Done: " + task);
+                    myAdapter.notifyDataSetChanged();
                 }
 
             }
@@ -81,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                                             }
         );
 
-        elem =  (EditText)findViewById(R.id.input);
+        elem =  (EditText)findViewById(R.id.inputText);
 
         //myAdapter.add("Lab 3: Prof. White");
         AlertDialog.Builder builder = new
@@ -101,11 +113,11 @@ public class MainActivity extends AppCompatActivity {
                         case 0: // Delete
                             mCursor.moveToPosition(currentPos);
                             String rowId = mCursor.getString(0);  // get the id
-                            if (db == null) db = dbHelper.getWritableDatabase();
+                            if (db == null)
+                                db = dbHelper.getWritableDatabase();
                             db.delete(dbHelper.TABLE_NAME,"_id = ?",new String[]{rowId});
                             mCursor.requery();
                             myAdapter.notifyDataSetChanged();
-                            //
                             // remove item from DB
                             break;
                         default:
@@ -121,35 +133,65 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void addElem(View v) {
+    public void buttonAdd(View v) {
         String input = elem.getText().toString();
-        doAdd(input);
+        doAddTop(input);
         elem.setText("");
+
+        Toast.makeText(getApplicationContext(), "Adding " + input, Toast.LENGTH_SHORT).show();
+    }
+
+    private void doAddTop(String input) {
+        if (!input.equals("")) {
+            // Add to Database
+            ContentValues cv = new ContentValues(1);
+            cv.put(DatabaseOpenHelper.ITEM, input);
+            if (db == null)
+                db = dbHelper.getWritableDatabase();
+            db.insert(TABLE_NAME, null, cv);
+            mCursor.requery();
+            myAdapter.notifyDataSetChanged();
+        }
     }
 
     private void doAdd(String input) {
         if (!input.equals("")) {
-            Toast.makeText(getApplicationContext(), "Adding " + input, Toast.LENGTH_SHORT).show();
-            // add to db
+            // Add to Database
             ContentValues cv = new ContentValues(1);
             cv.put(DatabaseOpenHelper.ITEM, input);
-            if (db == null) db = dbHelper.getWritableDatabase();
+            if (db == null)
+                db = dbHelper.getWritableDatabase();
             db.insert(TABLE_NAME, null, cv);
             mCursor.requery();
             myAdapter.notifyDataSetChanged();
-
         }
     }
 
-    public void deleteDone(View v) {
+    public int doDelete(String input) {
+        return db.delete(dbHelper.TABLE_NAME, "item = ?", new String[] {input});
+    }
+
+    public void buttonDeleteAllDone(View v) {
         int len = myAdapter.getCount();
-        for (int i=len-1;i >= 0;i--) {
-            String task = myAdapter.getItem(i).toString();
-            if (task.startsWith("Done: ")) {
-                // remove from db
-                // TODO Lab 6
-//                myAdapter.remove(task);
+        if (myAdapter.isEmpty()) {
+            // Throw a warning to user
+            Toast.makeText(getApplicationContext(), "Your to-do list is empty. Nothing to delete", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "Deleting all completed task", Toast.LENGTH_SHORT).show();
+            for (int i = len - 1; i >= 0; i--) {
+                mCursor.moveToPosition(i);
+                String task = mCursor.getString(1);
+                if (task.startsWith("Done: ")) {
+                    if (db == null)
+                        db = dbHelper.getWritableDatabase();
+
+                    doDelete(task);
+                    mCursor.requery();
+                    myAdapter.notifyDataSetChanged();
+                }
             }
         }
     }
+
 }
