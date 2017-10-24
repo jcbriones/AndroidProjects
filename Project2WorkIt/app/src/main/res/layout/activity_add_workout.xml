@@ -6,6 +6,22 @@
     android:layout_height="match_parent"
     tools:context="com.jcbriones.gmu.project2workit.AddWorkout">
 
+    <TextView
+        android:id="@+id/copyright"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="7dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:gravity="center"
+        android:text="Created by Jc Briones"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="472dp"
@@ -13,7 +29,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="7dp"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -36,6 +52,35 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewWorkout"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Name"
+                    android:textSize="23dp"
+                    tools:layout_editor_absoluteX="27dp"
+                    tools:layout_editor_absoluteY="117dp" />
+
+                <EditText
+                    android:id="@+id/inputWorkout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="text"
+                    android:textAlignment="center"
+                    tools:layout_editor_absoluteX="34dp"
+                    tools:layout_editor_absoluteY="134dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:orientation="horizontal">
 
                 <TextView
@@ -49,20 +94,21 @@
                     tools:layout_editor_absoluteY="117dp" />
 
                 <EditText
-                    android:id="@+id/inputExcellent"
+                    android:id="@+id/inputWeight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
                     android:inputType="number"
                     android:text="0"
+                    android:textAlignment="center"
                     tools:layout_editor_absoluteX="34dp"
                     tools:layout_editor_absoluteY="134dp" />
 
             </LinearLayout>
 
             <SeekBar
-                android:id="@+id/seekBarExcellent"
+                android:id="@+id/seekBarWeight"
                 style="@android:style/Widget.Material.SeekBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -84,20 +130,21 @@
                     tools:layout_editor_absoluteY="117dp" />
 
                 <EditText
-                    android:id="@+id/inputAverage"
+                    android:id="@+id/inputReps"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
                     android:inputType="number"
                     android:text="0"
+                    android:textAlignment="center"
                     tools:layout_editor_absoluteX="117dp"
                     tools:layout_editor_absoluteY="134dp" />
 
             </LinearLayout>
 
             <SeekBar
-                android:id="@+id/seekBarAverage"
+                android:id="@+id/seekBarReps"
                 style="@android:style/Widget.Material.SeekBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -122,19 +169,20 @@
                     tools:layout_editor_absoluteY="117dp" />
 
                 <EditText
-                    android:id="@+id/inputLacking"
+                    android:id="@+id/inputSets"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
                     android:inputType="number"
                     android:text="0"
+                    android:textAlignment="center"
                     tools:layout_editor_absoluteX="226dp"
                     tools:layout_editor_absoluteY="134dp" />
             </LinearLayout>
 
             <SeekBar
-                android:id="@+id/seekBarLacking"
+                android:id="@+id/seekBarSets"
                 style="@android:style/Widget.Material.SeekBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -143,33 +191,17 @@
                 tools:layout_editor_absoluteY="581dp" />
 
             <Button
-                android:id="@+id/buttonUpdate"
+                android:id="@+id/buttonAdd"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="onButtonClickUpdate"
+                android:onClick="onButtonClickAdd"
                 android:text="Add Workout"
                 tools:layout_editor_absoluteX="67dp"
                 tools:layout_editor_absoluteY="273dp" />
 
         </LinearLayout>
     </ScrollView>
-
-    <TextView
-        android:id="@+id/copyright"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="7dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:gravity="center"
-        android:text="Created by Jc Briones"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

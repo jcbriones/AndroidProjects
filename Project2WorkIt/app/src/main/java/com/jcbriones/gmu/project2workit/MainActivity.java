@@ -20,6 +20,10 @@ import static com.jcbriones.gmu.project2workit.DatabaseOpenHelper.TABLE_NAME;
 public class MainActivity extends AppCompatActivity {
 
     public static final String WORKOUT_ID = "com.jcbriones.gmu.project2workit.WORKOUT_ID";
+    public static final String WORKOUT = "com.jcbriones.gmu.project2workit.WORKOUT";
+    public static final String WEIGHT = "com.jcbriones.gmu.project2workit.WEIGHT";
+    public static final String REPS = "com.jcbriones.gmu.project2workit.REPS";
+    public static final String SETS = "com.jcbriones.gmu.project2workit.SETS";
 
     // Variables
     private SimpleCursorAdapter adapter;
@@ -27,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private SQLiteDatabase db = null;
     private DatabaseOpenHelper dbHelper = null;
     private Cursor mCursor;
-    private int requestCode;
+    private int RequestCode;
+    private String[] columns = new String[] {"_id", DatabaseOpenHelper.WORKOUT, DatabaseOpenHelper.WEIGHT, DatabaseOpenHelper.REPS, DatabaseOpenHelper.SETS};
     // View Variables
     protected AlertDialog actions;
     protected TextView inputText;
@@ -49,6 +54,15 @@ public class MainActivity extends AppCompatActivity {
                                                 }
         );
 
+        mCursor = db.query(TABLE_NAME, columns, null, null, null, null, null);
+        adapter = new SimpleCursorAdapter(this,
+                android.R.layout.simple_list_item_1,
+                mCursor,
+                new String[] { "item" },
+                new int[] { android.R.id.text1 });
+
+        exerciseList.setAdapter(adapter);
+
         // Alert Pop-up
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("What would you like to do with this workout?");
@@ -57,6 +71,14 @@ public class MainActivity extends AppCompatActivity {
         builder.setNegativeButton("Cancel", null);
         actions = builder.create();
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == RequestCode && resultCode == RESULT_OK && intent != null) {
+            //addToList(intent.getStringExtra(WORKOUT), intent.getStringExtra(WEIGHT), intent.getStringExtra(REPS), intent.getStringExtra(SETS));
+        }
+    }
+
 
     DialogInterface.OnClickListener actionListener =
             new DialogInterface.OnClickListener() {
@@ -82,18 +104,30 @@ public class MainActivity extends AppCompatActivity {
     private void modifyWorkout(String rowId) {
         Intent intent = new Intent(this, ModifyWorkout.class);
         intent.putExtra(WORKOUT_ID, rowId);
-        startActivityForResult(intent, requestCode);
+        startActivityForResult(intent, RequestCode);
     }
 
     private void initializeVariables() {
         dbHelper = new DatabaseOpenHelper(this);
         db = dbHelper.getWritableDatabase();
-        requestCode = 0;
+        RequestCode = 0;
 
         // View Variables
         exerciseList = (ListView) findViewById(R.id.exerciseList);
     }
-//
+
+    private void addToList(String workout, String weight, String reps, String sets) {
+        // Add to Database
+        ContentValues cv = new ContentValues();
+        cv.put(DatabaseOpenHelper.WORKOUT, workout);
+        cv.put(DatabaseOpenHelper.WEIGHT, weight);
+        cv.put(DatabaseOpenHelper.REPS, reps);
+        cv.put(DatabaseOpenHelper.SETS, sets);
+        db.insert(TABLE_NAME, null, cv);
+        mCursor.requery();
+        adapter.notifyDataSetChanged();
+    }
+
 //    private void addToList(String input) {
 //        if (!input.equals("")) {
 //            // Add to Database
@@ -112,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
     /** View Buttons */
     public void onButtonClickAddWorkout(View view) {
         Intent intent = new Intent(this, AddWorkout.class);
-        startActivityForResult(intent, requestCode);
+        startActivityForResult(intent, RequestCode);
     }
 
 }
