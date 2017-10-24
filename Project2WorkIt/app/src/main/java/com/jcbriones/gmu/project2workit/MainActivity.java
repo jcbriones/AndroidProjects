@@ -20,11 +20,6 @@ import static com.jcbriones.gmu.project2workit.DatabaseOpenHelper.TABLE_NAME;
 public class MainActivity extends AppCompatActivity {
 
     public static final String WORKOUT_ID = "com.jcbriones.gmu.project2workit.WORKOUT_ID";
-    public static final String WORKOUT = "com.jcbriones.gmu.project2workit.WORKOUT";
-    public static final String WEIGHT = "com.jcbriones.gmu.project2workit.WEIGHT";
-    public static final String REPS = "com.jcbriones.gmu.project2workit.REPS";
-    public static final String SETS = "com.jcbriones.gmu.project2workit.SETS";
-
     // Variables
     private SimpleCursorAdapter adapter;
     private int currentPos;
@@ -35,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
     private String[] columns = new String[] {"_id", DatabaseOpenHelper.WORKOUT, DatabaseOpenHelper.WEIGHT, DatabaseOpenHelper.REPS, DatabaseOpenHelper.SETS};
     // View Variables
     protected AlertDialog actions;
-    protected TextView inputText;
     protected ListView exerciseList;
 
     @Override
@@ -46,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
         exerciseList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                                                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                                                        Toast.makeText(getApplicationContext(), "Removing " + ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
                                                         currentPos = position;
                                                         actions.show();
                                                         return true;
@@ -56,12 +49,20 @@ public class MainActivity extends AppCompatActivity {
 
         mCursor = db.query(TABLE_NAME, columns, null, null, null, null, null);
         adapter = new SimpleCursorAdapter(this,
-                android.R.layout.simple_list_item_1,
+                R.layout.list_item_full,
                 mCursor,
-                new String[] { "item" },
-                new int[] { android.R.id.text1 });
+                new String[] { "workout", "weight", "reps", "sets" },
+                new int[] { R.id.firstLine, R.id.weight, R.id.reps, R.id.sets });
 
         exerciseList.setAdapter(adapter);
+
+        exerciseList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mCursor.moveToPosition(position);
+                String rowId = mCursor.getString(0);
+                modifyWorkout(rowId);
+            }
+        });
 
         // Alert Pop-up
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -75,10 +76,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == RequestCode && resultCode == RESULT_OK && intent != null) {
-            //addToList(intent.getStringExtra(WORKOUT), intent.getStringExtra(WEIGHT), intent.getStringExtra(REPS), intent.getStringExtra(SETS));
+            mCursor.requery();
+            adapter.notifyDataSetChanged();
         }
     }
-
 
     DialogInterface.OnClickListener actionListener =
             new DialogInterface.OnClickListener() {
@@ -116,33 +117,6 @@ public class MainActivity extends AppCompatActivity {
         exerciseList = (ListView) findViewById(R.id.exerciseList);
     }
 
-    private void addToList(String workout, String weight, String reps, String sets) {
-        // Add to Database
-        ContentValues cv = new ContentValues();
-        cv.put(DatabaseOpenHelper.WORKOUT, workout);
-        cv.put(DatabaseOpenHelper.WEIGHT, weight);
-        cv.put(DatabaseOpenHelper.REPS, reps);
-        cv.put(DatabaseOpenHelper.SETS, sets);
-        db.insert(TABLE_NAME, null, cv);
-        mCursor.requery();
-        adapter.notifyDataSetChanged();
-    }
-
-//    private void addToList(String input) {
-//        if (!input.equals("")) {
-//            // Add to Database
-//            ContentValues cv = new ContentValues(1);
-//            cv.put(DatabaseOpenHelper.WORKOUT, input);
-//            db.insert(TABLE_NAME, null, cv);
-//            mCursor.requery();
-//            adapter.notifyDataSetChanged();
-//        }
-//    }
-//
-//    public int doDelete(String workout) {
-//        return db.delete(dbHelper.TABLE_NAME, "workout = ?", new String[] { workout });
-//    }
-//
     /** View Buttons */
     public void onButtonClickAddWorkout(View view) {
         Intent intent = new Intent(this, AddWorkout.class);

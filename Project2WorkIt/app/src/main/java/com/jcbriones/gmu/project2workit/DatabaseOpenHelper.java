@@ -9,14 +9,13 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
+    final static String _ID = "_id";
     final static String TABLE_NAME = "workouts";
     final static String WORKOUT = "workout";
     final static String WEIGHT = "weight";
     final static String REPS = "reps";
     final static String SETS = "sets";
-    final static String NOTES = "notes";
-    final static String _ID = "_id";
-    final private static String CREATE_CMD = "CREATE TABLE "+TABLE_NAME+" (" + _ID +" INTEGER PRIMARY KEY AUTOINCREMENT, " +WORKOUT + " TEXT NOT NULL, " +WEIGHT + " TEXT NOT NULL, " +REPS + " TEXT NOT NULL, " +SETS + " TEXT NOT NULL, " +NOTES + " TEXT NOT NULL)";
+    final private static String CREATE_CMD = "CREATE TABLE "+TABLE_NAME+" (" + _ID +" INTEGER PRIMARY KEY AUTOINCREMENT, " + WORKOUT + " TEXT NOT NULL, " + WEIGHT + " TEXT NOT NULL, " + REPS + " TEXT NOT NULL, " + SETS + " TEXT NOT NULL)";
 
     final private static String NAME = "workout_db";
     final private static Integer VERSION = 2;
