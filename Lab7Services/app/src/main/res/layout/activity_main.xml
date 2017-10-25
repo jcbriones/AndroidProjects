@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" android:orientation="vertical"
+    tools:context="com.jcbriones.gmu.lab7services.MainActivity">
+
+    <TextView
+        android:layout_width="match_parent"  android:id="@+id/label"
+        android:layout_height="wrap_content" android:textSize="14pt" android:text="Music Player"/>
+    <Button  android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:onClick="onClick"
+        android:id="@+id/buttonStart1" android:text="Start music as service" android:textSize="14pt"
+        />
+    <Button  android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:id="@+id/buttonStart2" android:text="Start music in UI" android:textSize="14pt"
+        android:onClick="onClick"
+        />
+
+    <Button  android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:id="@+id/buttonService" android:text="Start blocking service" android:textSize="14pt"
+        android:onClick="onClick"
+        />
+    <Button  android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:id="@+id/buttonIntent" android:text="Start Intent service" android:textSize="14pt"
+        android:onClick="onClick"
+        />
+    <Button  android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:id="@+id/buttonBlock" android:text="Block the UI (5 sec)" android:textSize="14pt"
+        android:onClick="onClick"
+        />
+    <Button  android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:id="@+id/buttonAwake" android:text="UI Awake? 0" android:textSize="14pt"
+        android:onClick="onClick"
+        />
+</LinearLayout>
