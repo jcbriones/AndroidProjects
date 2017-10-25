@@ -11,15 +11,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import static com.jcbriones.gmu.project2workit.DatabaseOpenHelper.TABLE_NAME;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String WORKOUT_ID = "com.jcbriones.gmu.project2workit.WORKOUT_ID";
+    public static ArrayList<Integer> iconList = new ArrayList<>();
     // Variables
     private SimpleCursorAdapter adapter;
     private int currentPos;
@@ -27,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseOpenHelper dbHelper = null;
     private Cursor mCursor;
     private int RequestCode;
-    private String[] columns = new String[] {"_id", DatabaseOpenHelper.WORKOUT, DatabaseOpenHelper.WEIGHT, DatabaseOpenHelper.REPS, DatabaseOpenHelper.SETS};
+    private String[] columns = new String[] {DatabaseOpenHelper._ID, DatabaseOpenHelper.ICON, DatabaseOpenHelper.WORKOUT, DatabaseOpenHelper.WEIGHT, DatabaseOpenHelper.REPS, DatabaseOpenHelper.SETS, DatabaseOpenHelper.NOTES};
     // View Variables
     protected AlertDialog actions;
     protected ListView exerciseList;
@@ -51,9 +53,19 @@ public class MainActivity extends AppCompatActivity {
         adapter = new SimpleCursorAdapter(this,
                 R.layout.list_item_full,
                 mCursor,
-                new String[] { "workout", "weight", "reps", "sets" },
-                new int[] { R.id.firstLine, R.id.weight, R.id.reps, R.id.sets });
+                new String[] { DatabaseOpenHelper.ICON, DatabaseOpenHelper.WORKOUT, DatabaseOpenHelper.WEIGHT, DatabaseOpenHelper.REPS, DatabaseOpenHelper.SETS },
+                new int[] { R.id.lisItemIcon, R.id.firstLine, R.id.weight, R.id.reps, R.id.sets });
 
+        adapter.setViewBinder(new SimpleCursorAdapter.ViewBinder(){
+            /** Binds the Cursor column defined by the specified index to the specified view */
+            public boolean setViewValue(View view, Cursor cursor, int columnIndex){
+                if(view.getId() == R.id.lisItemIcon){
+                    ((ImageView)view).setImageResource(iconList.get(cursor.getInt(1)));
+                    return true;
+                }
+                return false;
+            }
+        });
         exerciseList.setAdapter(adapter);
 
         exerciseList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -71,6 +83,35 @@ public class MainActivity extends AppCompatActivity {
         builder.setItems(options, actionListener);
         builder.setNegativeButton("Cancel", null);
         actions = builder.create();
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        addToList("0", "Yoga", "2", "1", "1", "Notes for workout");
+                        addToList("1", "Biceps", "25", "12", "3", "Notes for workout");
+                        addToList("1", "Triceps", "20", "12", "3", "Notes for workout");
+                        addToList("1", "Shoulders", "50", "12", "3", "Notes for workout");
+                        addToList("1", "Back", "150", "12", "3", "Notes for workout");
+                        addToList("1", "Legs", "400", "20", "3", "Notes for workout");
+                        addToList("2", "Swimming", "400", "1", "1", "Notes for workout");
+                        addToList("2", "Running", "5000", "1", "1", "Notes for workout");
+                        addToList("2", "Biking", "15000", "1", "1", "Notes for workout");
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
+
+        // Ask user to add sample workouts if the database is empty
+        if (mCursor.getCount() == 0) {
+            AlertDialog.Builder generateWorkouts = new AlertDialog.Builder(this);
+            generateWorkouts.setMessage("Would you like to generate workouts?").setPositiveButton("Yes", dialogClickListener).setNegativeButton("No", dialogClickListener).show();
+        }
     }
 
     @Override
@@ -92,6 +133,9 @@ public class MainActivity extends AppCompatActivity {
                             modifyWorkout(rowId);
                             break;
                         case 1: // Delete
+                            // Make sure to allow writing before inserting
+                            if(db == null)
+                                db = dbHelper.getWritableDatabase();
                             db.delete(dbHelper.TABLE_NAME,"_id = ?",new String[]{rowId});
                             mCursor.requery();
                             adapter.notifyDataSetChanged();
@@ -102,6 +146,23 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
 
+    private void addToList(String icon, String workout, String weight, String reps, String sets, String notes) {
+        // Make sure to allow writing before inserting
+        if(db == null)
+            db = dbHelper.getWritableDatabase();
+        // Add to Database
+        ContentValues cv = new ContentValues(1);
+        cv.put(DatabaseOpenHelper.ICON, icon);
+        cv.put(DatabaseOpenHelper.WORKOUT, workout);
+        cv.put(DatabaseOpenHelper.WEIGHT, weight);
+        cv.put(DatabaseOpenHelper.REPS, reps);
+        cv.put(DatabaseOpenHelper.SETS, sets);
+        cv.put(DatabaseOpenHelper.NOTES, notes);
+        db.insert(TABLE_NAME, null, cv);
+        mCursor.requery();
+        adapter.notifyDataSetChanged();
+    }
+
     private void modifyWorkout(String rowId) {
         Intent intent = new Intent(this, ModifyWorkout.class);
         intent.putExtra(WORKOUT_ID, rowId);
@@ -111,10 +172,16 @@ public class MainActivity extends AppCompatActivity {
     private void initializeVariables() {
         dbHelper = new DatabaseOpenHelper(this);
         db = dbHelper.getWritableDatabase();
+        //dbHelper.deleteDatabase();
         RequestCode = 0;
 
         // View Variables
         exerciseList = (ListView) findViewById(R.id.exerciseList);
+
+        // Add Icon List
+        iconList.add(R.drawable.icon0);
+        iconList.add(R.drawable.icon1);
+        iconList.add(R.drawable.icon2);
     }
 
     /** View Buttons */
