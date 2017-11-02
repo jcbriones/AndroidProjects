@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Lab8 Networking and JSON</string>
+    <string name="title_activity_maps">Map</string>
 </resources>
