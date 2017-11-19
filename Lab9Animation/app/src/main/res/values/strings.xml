@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Lab9Animation - Jc Briones</string>
+    <string name="mode_ready">Apples!\nTouch Screen To Play</string>
+    <string name="mode_pause">Paused\nTouch Screen To Resume</string>
+    <string name="mode_lose_prefix">Game Over\nScore: </string>
+    <string name="mode_lose_suffix">\nTouch Screen To Play</string>
+
+    <string name="snake_layout_text_text">Touch Screen to Start</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+</resources>
